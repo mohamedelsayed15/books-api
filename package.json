@@ -1,0 +1,30 @@
+{
+  "name": "1-postgres",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "predev": "rimraf dist && npx tsc",
+    "dev": "npx tsc --preserveWatchOutput & env-cmd ./config/dev.env npx nodemon dist/app"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.4",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^20.2.5",
+    "@types/pg": "^8.10.2",
+    "env-cmd": "^8.0.2",
+    "nodemon": "^2.0.22",
+    "rimraf": "^5.0.1"
+  },
+  "description": ""
+}
