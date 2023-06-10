@@ -12,15 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const queries_1 = require("../db/queries");
-const connection_1 = require("../db/connection");
 const store_model_1 = __importDefault(require("../models/store.model"));
 //const dbConnection = require("../db/connection")
 exports.getStoreList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const storeListQuery = queries_1.storeQuery.GET_STORE_LIST;
-        const storeList = yield (0, connection_1.query)(storeListQuery, null);
-        res.status(200).send(storeList);
+        // const storeListQuery = storeQuery.GET_STORE_LIST
+        // const storeList = await query(storeListQuery, null)
+        let storeList = yield store_model_1.default.getStores();
+        res.status(200).send(storeList.rows);
     }
     catch (e) {
         return res.status(500).send({
@@ -30,19 +29,20 @@ exports.getStoreList = (req, res) => __awaiter(void 0, void 0, void 0, function*
 });
 exports.addStore = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!req.body.storeName || !req.body.address || !req.body.code) {
+        if (!req.body.storeName || !req.body.address) {
+            console.log("ssss");
             return res.status(422).send({
                 error: "Either storeName or address are required"
             });
         }
-        const store = new store_model_1.default({
+        const store = yield store_model_1.default.create({
             name: req.body.storeName,
-            address: req.body.address,
-            code: req.body.code
+            address: req.body.address
         });
-        const addStoreQuery = queries_1.storeQuery.ADD_STORE;
-        const storeList = yield (0, connection_1.query)(addStoreQuery, null);
+        res.status(201).send({ store });
     }
     catch (e) {
+        console.log(e);
+        res.status(500).send({ e });
     }
 });

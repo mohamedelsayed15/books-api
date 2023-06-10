@@ -1,24 +1,57 @@
-import { resolve } from "path";
+import { query } from "../db/connection"
+import { storeQuery } from "../db/queries"
+import { generateStoreCode } from "../util/generateRandomString"
 
-interface StoreOptions {
-    name: string;
-    code: string;
-    address: string;
-}
+// interface StoreOptions {
+//     name: string;
+//     address: string;
+//     code: string;
+// }
 export default class Store {
-    private name: string;
-    private code: string;
-    private address: string;
+    // name: string;
+    // code: string;
+    // address: string;
+    // constructor(options: StoreOptions) {
+    //     const { name, address } = options;
 
-    constructor(options: StoreOptions) {
-        const { name, code, address } = options;
+    //     this.name = name;
+    //     this.code = generateStoreCode();
+    //     this.address = address;
+    //     // this.create().then(store => console.log(store)).catch(e => {
+    //     //     throw e
+    //     // })
+    // }
+    //=============== Functions ===============
+    // creating a new store
+    static async create(options: any) {
+        const { name, address } = options;
 
-        this.name = name;
-        this.code = code;
-        this.address = address;
-        //console.log(name)
-        // return new Promise((resolve, reject) => {
-            
-        // })
+        return new Promise(async (resolve, reject) => {
+            try {
+                // generate store code
+                options.code = generateStoreCode()
+                // implement query
+                const store = await query(storeQuery.ADD_STORE, [
+                    name,
+                    address,
+                    options.code
+                ]);
+                resolve(options)
+            } catch (e) {
+                reject(e)
+            }
+        })
+    }
+    // fetching store list
+    static async getStores() {
+
+        return new Promise(async (resolve, reject) => {
+            try {
+                const stores = await query(storeQuery.GET_STORE_LIST,null);
+                resolve(stores)
+            } catch (e) {
+                reject(e)
+            }
+        })
     }
 }
