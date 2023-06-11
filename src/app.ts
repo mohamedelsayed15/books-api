@@ -1,5 +1,7 @@
 import express from 'express'
 import storeRoutes from './routes/store.route'
+import bookRoutes from './routes/book.route'
+
 
 require('dotenv').config()
 
@@ -11,7 +13,9 @@ const app = express()
 app.use(cors())
 app.use(express.json({ limit: "3kb" })); //parser//json data size limitation
 
-app.use('/store',storeRoutes)
+app.use('/store', storeRoutes)
+app.use('/book',bookRoutes)
+
 
 
 

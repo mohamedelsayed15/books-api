@@ -2,11 +2,6 @@ import { query } from "../db/connection"
 import { storeQuery } from "../db/queries"
 import { generateStoreCode } from "../util/generateRandomString"
 
-// interface StoreOptions {
-//     name: string;
-//     address: string;
-//     code: string;
-// }
 export default class Store {
     // name: string;
     // code: string;
@@ -21,8 +16,6 @@ export default class Store {
     //     //     throw e
     //     // })
     // }
-    //=============== Functions ===============
-    // creating a new store
     static async create(options: any) {
         const { name, address } = options;
 
@@ -47,8 +40,8 @@ export default class Store {
 
         return new Promise(async (resolve, reject) => {
             try {
-                const stores = await query(storeQuery.GET_STORE_LIST,null);
-                resolve(stores)
+                const stores:any = await query(storeQuery.GET_STORE_LIST,null);
+                resolve(stores.rows)
             } catch (e) {
                 reject(e)
             }

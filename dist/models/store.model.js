@@ -12,11 +12,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const connection_1 = require("../db/connection");
 const queries_1 = require("../db/queries");
 const generateRandomString_1 = require("../util/generateRandomString");
-// interface StoreOptions {
-//     name: string;
-//     address: string;
-//     code: string;
-// }
 class Store {
     // name: string;
     // code: string;
@@ -30,8 +25,6 @@ class Store {
     //     //     throw e
     //     // })
     // }
-    //=============== Functions ===============
-    // creating a new store
     static create(options) {
         return __awaiter(this, void 0, void 0, function* () {
             const { name, address } = options;
@@ -59,7 +52,7 @@ class Store {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     const stores = yield (0, connection_1.query)(queries_1.storeQuery.GET_STORE_LIST, null);
-                    resolve(stores);
+                    resolve(stores.rows);
                 }
                 catch (e) {
                     reject(e);

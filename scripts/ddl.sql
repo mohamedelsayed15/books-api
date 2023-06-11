@@ -8,7 +8,7 @@ CREATE TABLE bms.book (
 	book_author varchar(50) not null,
 	book_publisher varchar(50) not null,
 	book_pages integer null,
-	store_code varchar(5) not null,
+	--store_code varchar(5) not null,
 	CONSTRAINT book_pkey PRIMARY KEY (book_id)
 );
 
@@ -22,6 +22,6 @@ CREATE TABLE bms.store (
 	store_id serial4 NOT NULL,
 	store_name varchar(100) NOT NULL,
 	store_address varchar(100) NOT NULL,
-	store_code varchar NULL,
+	store_code varchar NOT NULL,
 	CONSTRAINT store_pkey PRIMARY KEY (store_id)
 );

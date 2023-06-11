@@ -13,20 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const store_model_1 = __importDefault(require("../models/store.model"));
-//const dbConnection = require("../db/connection")
-exports.getStoreList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        // const storeListQuery = storeQuery.GET_STORE_LIST
-        // const storeList = await query(storeListQuery, null)
-        let storeList = yield store_model_1.default.getStores();
-        res.status(200).send(storeList.rows);
-    }
-    catch (e) {
-        return res.status(500).send({
-            error: "some error occurred, Please contact support"
-        });
-    }
-});
 exports.addStore = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.body.storeName || !req.body.address) {
@@ -44,5 +30,16 @@ exports.addStore = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     catch (e) {
         console.log(e);
         res.status(500).send({ e });
+    }
+});
+exports.getStoreList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let storesList = yield store_model_1.default.getStores();
+        res.status(200).send({ storesList });
+    }
+    catch (e) {
+        return res.status(500).send({
+            error: "some error occurred, Please contact support"
+        });
     }
 });

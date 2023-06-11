@@ -1,30 +1,45 @@
-export default class Book  {
+import { query } from "../db/connection"
+import { bookQuery } from "../db/queries"
 
-    private id: number
-    private title: string
-    private isbn: number
-    private author: string
-    private description: string
-    private pages: number
-    private publisher: string
-
-    constructor(
-        id: number,
-        title: string,
-        description: string,
-        isbn: number,
-        author: string,
-        publisher:string,
-        pages: number) {
-
-        this.id = id
-        this.title = title
-        this.description = description
-        this.isbn = isbn
-        this.author = author
-        this.publisher = publisher
-        this.pages =pages
-
+export default class Book {
+    //=============== Functions ===============
+    // add a new book
+    static async create(options: any) {
+        const {
+            title,
+            description,
+            isbn,
+            author,
+            publisher,
+            pages
+        } = options;
+        return new Promise(async (resolve, reject) => {
+            try {
+                // implement query
+                await query(bookQuery.ADD_BOOK, [
+                    title,
+                    description,
+                    isbn,
+                    author,
+                    publisher,
+                    pages
+                ]);
+                resolve(options)
+            } catch (e) {
+                reject(e)
+            }
+        })
     }
+    // fetching books list
+    static async getBooks() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const books: any = await query(bookQuery.GET_BOOKS_LIST, null);
 
+                resolve(books.rows)
+            } catch (e) {
+                reject(e)
+            }
+        })
+    }
 }
