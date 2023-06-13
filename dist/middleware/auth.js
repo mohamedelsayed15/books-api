@@ -11,6 +11,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.auth = void 0;
 const jwt = require('jsonwebtoken');
+const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        let headerToken = req.header('Authorization');
+        if (!headerToken || !headerToken.startsWith('Bearer ')) {
+            return res.status(422).send({
+                error: "the request is missing bearer token"
+            });
+        }
+        else {
+            headerToken = headerToken.replace('Bearer ', '');
+        }
+        //custom function (promise)
+        const decoded = yield jwtVerify(headerToken);
+        req.id = decoded.id;
+        next();
+    }
+    catch (e) {
+    }
+});
+exports.auth = auth;
 const jwtVerify = (headerToken) => {
     return new Promise((resolve, reject) => {
         jwt.verify(headerToken, process.env.JWT_SECRET, (err, decoded) => {
@@ -23,22 +43,3 @@ const jwtVerify = (headerToken) => {
         });
     });
 };
-const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        let headerToken = req.header('Authorization');
-        if (!headerToken || !headerToken.startsWith('Bearer ')) {
-            return res.status(422).send({
-                error: "the request is missing bearer token"
-            });
-        }
-        else {
-            headerToken = headerToken.replace('Bearer ', '');
-        }
-        const decoded = yield jwtVerify(headerToken);
-        req.id = decoded.id;
-        next();
-    }
-    catch (e) {
-    }
-});
-exports.auth = auth;

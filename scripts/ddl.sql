@@ -8,7 +8,7 @@ CREATE TABLE bms.book (
 	book_author varchar(50) not null,
 	book_publisher varchar(50) not null,
 	book_pages integer null,
-	--store_code varchar(5) not null,
+	store_code varchar(5) not null,
 	CONSTRAINT book_pkey PRIMARY KEY (book_id)
 );
 
@@ -24,4 +24,16 @@ CREATE TABLE bms.store (
 	store_address varchar(100) NOT NULL,
 	store_code varchar NOT NULL,
 	CONSTRAINT store_pkey PRIMARY KEY (store_id)
+);
+
+-- app_audit
+CREATE TABLE bms.app_audit (
+	audit_id serial NOT NULL,
+	audit_action varchar(100) NOT NULL,
+	audit_data json NULL,
+	audit_by varchar(50) NOT NULL,
+	audit_on timestamp NOT NULL,
+	audit_status varchar(50) NULL,
+	audit_error json NULL,
+	CONSTRAINT app_audit_pkey PRIMARY KEY (audit_id)
 );

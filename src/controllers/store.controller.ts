@@ -3,9 +3,9 @@ import Store from "../models/store.model"
 
 exports.addStore = async (req: Request, res: Response) => {
     try {
+
         if (!req.body.storeName || !req.body.address) {
-            console.log("ssss")
-            return res.status(422).send({
+            return res.status(422).json({
                 error: "Either storeName or address are required"
             })
         }
@@ -15,10 +15,10 @@ exports.addStore = async (req: Request, res: Response) => {
             address: req.body.address
         })
 
-        res.status(201).send({ store })
+        res.status(201).json({ store })
     } catch (e) {
         console.log(e)
-        res.status(500).send({e})
+        res.status(500).json({e})
     }
 }
 exports.getStoreList = async (req:Request,res:Response) => {
@@ -26,10 +26,10 @@ exports.getStoreList = async (req:Request,res:Response) => {
 
         let storesList = await Store.getStores()
 
-        res.status(200).send({storesList})
+        res.status(200).json({storesList})
 
     } catch (e) {
-        return res.status(500).send({
+        return res.status(500).json({
             error: "some error occurred, Please contact support"
         })
     }

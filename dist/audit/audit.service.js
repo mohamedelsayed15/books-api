@@ -12,33 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const store_model_1 = __importDefault(require("../models/store.model"));
-exports.addStore = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.prepareAudit = void 0;
+const node_events_1 = require("node:events");
+const audit_model_1 = __importDefault(require("../models/audit.model"));
+const eventEmitter = new node_events_1.EventEmitter();
+eventEmitter.on(`audit`, (audit) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        if (!req.body.storeName || !req.body.address) {
-            return res.status(422).json({
-                error: "Either storeName or address are required"
-            });
-        }
-        const store = yield store_model_1.default.create({
-            name: req.body.storeName,
-            address: req.body.address
-        });
-        res.status(201).json({ store });
+        audit_model_1.default.create(audit);
     }
     catch (e) {
         console.log(e);
-        res.status(500).json({ e });
     }
-});
-exports.getStoreList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        let storesList = yield store_model_1.default.getStores();
-        res.status(200).json({ storesList });
-    }
-    catch (e) {
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        });
-    }
-});
+}));
+const prepareAudit = (options) => {
+    const audit = new audit_model_1.default(options);
+    eventEmitter.emit('audit', audit);
+};
+exports.prepareAudit = prepareAudit;

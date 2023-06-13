@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "predev": "rimraf dist && npx tsc",
-    "dev": "npx tsc --preserveWatchOutput & env-cmd ./config/dev.env npx nodemon dist/app"
+    "dev": "tsc && node dist/app"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +16,8 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.11.0",
-    "randomstring": "^1.3.0"
+    "randomstring": "^1.3.0",
+    "winston": "^3.9.0"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",
