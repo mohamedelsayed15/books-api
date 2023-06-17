@@ -19,10 +19,8 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
                 error: "the request is missing bearer token"
             });
         }
-        else {
-            headerToken = headerToken.replace('Bearer ', '');
-        }
-        //custom function (promise)
+        headerToken = headerToken.substring(7);
+        //custom function (promise) 
         const decoded = yield jwtVerify(headerToken);
         req.id = decoded.id;
         next();
@@ -34,12 +32,10 @@ exports.auth = auth;
 const jwtVerify = (headerToken) => {
     return new Promise((resolve, reject) => {
         jwt.verify(headerToken, process.env.JWT_SECRET, (err, decoded) => {
-            if (decoded) {
-                resolve(decoded);
-            }
             if (err) {
-                reject(err);
+                return reject(err);
             }
+            resolve(decoded);
         });
     });
 };

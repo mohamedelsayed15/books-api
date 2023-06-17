@@ -5,15 +5,15 @@ import { JwtPayload } from 'jsonwebtoken'
 
 export const auth = async (req:any, res:Response, next:NextFunction) => {
     try {
-        let headerToken: string|undefined = req.header('Authorization')
+        let headerToken: string | undefined = req.header('Authorization')
+
         if (!headerToken || !headerToken.startsWith('Bearer ')){
             return res.status(422).send({
                 error:"the request is missing bearer token"
             })
-        } else {
-            headerToken = headerToken.replace('Bearer ', '')
         }
-        //custom function (promise)
+        headerToken = headerToken.substring(7)
+        //custom function (promise) 
         const decoded: any = await jwtVerify(headerToken)
 
         req.id = decoded.id
@@ -22,18 +22,17 @@ export const auth = async (req:any, res:Response, next:NextFunction) => {
     } catch (e) {
     }
 }
-const jwtVerify = (headerToken:string) => {
+const jwtVerify = (headerToken: string) => {
+    
     return new Promise((resolve, reject) => {
         jwt.verify(
             headerToken,
             process.env.JWT_SECRET,
-            (err: Error, decoded: JwtPayload) => {
-                if(decoded) {
-                    resolve(decoded)
-                }
+            (err: Error, decoded:JwtPayload ) => {
                 if (err) {
-                    reject(err)
+                    return reject(err)
                 }
+                resolve(decoded)
             })
         })
     }
