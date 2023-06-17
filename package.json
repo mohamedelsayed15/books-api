@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc && node dist/app"
+    "dev": "tsc && node dist/app",
+    "test": "mocha --timeout 10000"
   },
   "keywords": [],
   "author": "",
@@ -11,6 +12,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "bcryptjs": "^2.4.3",
+    "chai": "^4.3.7",
     "cors": "^2.8.5",
     "dotenv": "^16.1.4",
     "express": "^4.18.2",
@@ -29,7 +31,8 @@
     "@types/swagger-ui-express": "^4.1.3",
     "env-cmd": "^8.0.2",
     "nodemon": "^2.0.22",
-    "rimraf": "^5.0.1"
+    "rimraf": "^5.0.1",
+    "supertest": "^6.3.3"
   },
   "description": ""
 }

@@ -21,3 +21,4 @@ app.use('/book',bookRoutes)
 app.listen(process.env.PORT, () => {
     console.log(process.env.PORT)
 })
+module.exports = app

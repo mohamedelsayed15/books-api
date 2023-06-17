@@ -21,3 +21,4 @@ app.use('/book', book_route_1.default);
 app.listen(process.env.PORT, () => {
     console.log(process.env.PORT);
 });
+module.exports = app;

@@ -97,7 +97,7 @@ exports.addBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             pages: req.body.pages,
             storeCode: req.body.storeCode
         });
-        res.status(201).json({ book });
+        res.status(201).json(book);
     }
     catch (e) {
         console.log(e);

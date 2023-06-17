@@ -91,7 +91,7 @@ exports.addBook = async (req: Request, res: Response) => {
             storeCode : req.body.storeCode
         })
 
-        res.status(201).json({ book })
+        res.status(201).json(book)
     } catch (e) {
         console.log(e)
         return res.status(500).json({
