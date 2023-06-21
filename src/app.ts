@@ -4,6 +4,7 @@ import bookRoutes from './routes/book.route'
 import cors from 'cors'
 import swaggerUi from 'swagger-ui-express'
 import { prepareAudit } from "./audit/audit.service"
+import rateLimit from "./util/ratelimit"
 const swaggerDocument = require('../swagger.json')
 const app = express()
 const hpp = require('hpp');
@@ -18,6 +19,7 @@ app.use(cors({
 app.use(helmet())
 app.use(express.json({ limit: "3kb" })); //parser//json data size limitation
 app.use(hpp())//http parameter pollution
+app.use(rateLimit)
 //swagger endpoint
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 //routes
