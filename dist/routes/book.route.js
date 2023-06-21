@@ -9,7 +9,7 @@ router.delete('/delete-book/:id', bookController.deleteBook);
 router.post('/add-book', bookController.addBook);
 router.patch('/edit-book', bookController.updateBook);
 //404
-router.use('/*', (req, res, next) => {
+router.use('/*', (req, res) => {
     return res.status(404).json({
         error: "couldn't find the specified route"
     });

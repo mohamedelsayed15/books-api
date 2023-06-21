@@ -6,11 +6,18 @@ import swaggerUi from 'swagger-ui-express'
 import { prepareAudit } from "./audit/audit.service"
 const swaggerDocument = require('../swagger.json')
 const app = express()
+const hpp = require('hpp');
+const helmet = require('helmet')
 
 require('dotenv').config()
-
-app.use(cors())
+app.use(cors({
+    origin: 'http://127.0.0.1:5555',//postman default port
+    methods: ['GET', 'POST', 'PUT'],
+    credentials:true
+}))
+app.use(helmet())
 app.use(express.json({ limit: "3kb" })); //parser//json data size limitation
+app.use(hpp())//http parameter pollution
 //swagger endpoint
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 //routes

@@ -13,48 +13,48 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const book_model_1 = __importDefault(require("../models/book.model"));
-const audit_service_1 = require("../audit/audit.service");
-const audit_action_1 = require("../audit/audit.action");
 const logger_service_1 = __importDefault(require("../services/logger.service"));
-const log = new logger_service_1.default("book.controller");
+const log = new logger_service_1.default("store.controller");
+//===================================
 exports.getBooksList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log(req.query);
         let booksList = yield book_model_1.default.getBooks();
-        //auditing
-        (0, audit_service_1.prepareAudit)({
-            auditAction: audit_action_1.auditAction.GET_BOOK_LIST,
-            data: booksList,
-            status: 200,
-            error: null,
-            auditBy: "User",
-            auditOn: new Date(Date.now()).toLocaleString(),
-        });
         res.status(200).json({ booksList });
     }
     catch (err) {
         console.error('An error occurred', err);
         const error = new Error(err.message);
         log.error('getBooksList', error.toString());
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'getBookDetails',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
         return next(error);
     }
 });
 exports.getBookDetails = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let book = yield book_model_1.default.findById(req.paams.id);
+        let book = yield book_model_1.default.findById(req.params.id);
         if (!book) {
             return res.status(404).json({
                 error: "couldn't find specified book"
             });
         }
-        log.info('book', book);
         res.status(200).json(book);
     }
     catch (err) {
         console.error('An error occurred', err);
         const error = new Error(err.message);
         log.error('getBookDetails', error.toString());
+        // data for auditing handled in error handler in app.ts
         error.prepareAudit = {
-            auditAction: 'getBooksList',
+            auditAction: 'getBookDetails',
             data: null,
             status: 500,
             error: error.toString(),
@@ -83,6 +83,15 @@ exports.deleteBook = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         console.error('An error occurred', err);
         const error = new Error(err.message);
         log.error('deleteBook', error.toString());
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'deleteBook',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
         return next(error);
     }
 });
@@ -113,6 +122,15 @@ exports.addBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         console.error('An error occurred', err);
         const error = new Error(err.message);
         log.error('addBook', error.toString());
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'addBook',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
         return next(error);
     }
 });
@@ -148,9 +166,18 @@ exports.updateBook = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
         res.status(201).json({ book });
     }
     catch (err) {
-        console.error('An error occurred', err);
+        console.error(err);
         const error = new Error(err.message);
         log.error('updateBook', error.toString());
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'updateBook',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
         return next(error);
     }
 });

@@ -1,22 +1,17 @@
 import { Request,Response,NextFunction } from "express"
 import Book from "../models/book.model"
+
+//logging and auditing
 import { prepareAudit } from "../audit/audit.service"
 import { auditAction } from "../audit/audit.action"
 import Logger from "../services/logger.service"
-const log = new Logger("book.controller")
+const log = new Logger("store.controller")
+//===================================
 
 exports.getBooksList = async (req:Request,res:Response,next:NextFunction) => {
     try {
+        console.log(req.query)
         let booksList = await Book.getBooks()
-        //auditing
-        prepareAudit({
-            auditAction:auditAction.GET_BOOK_LIST,
-            data:booksList,
-            status:200,
-            error:null,
-            auditBy:"User",
-            auditOn:new Date(Date.now()).toLocaleString(),
-        })
         res.status(200).json({ booksList })
 
     }  catch (err:any) {

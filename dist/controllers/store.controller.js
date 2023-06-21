@@ -30,9 +30,18 @@ exports.addStore = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
         res.status(201).json({ store });
     }
     catch (err) {
-        console.error('An error occurred', err);
+        console.error(err);
         const error = new Error(err.message);
-        log.error('getBooksList', error.toString());
+        log.error('addStore', error.toString());
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'addStore',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
         return next(error);
     }
 });
@@ -42,9 +51,18 @@ exports.getStoreList = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         res.status(200).json({ storesList });
     }
     catch (err) {
-        console.error('An error occurred', err);
+        console.error(err);
         const error = new Error(err.message);
-        log.error('getBooksList', error.toString());
+        log.error('getStoreList', error.toString());
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'getStoreList',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
         return next(error);
     }
 });

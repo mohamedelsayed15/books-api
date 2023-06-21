@@ -11,9 +11,17 @@ const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const audit_service_1 = require("./audit/audit.service");
 const swaggerDocument = require('../swagger.json');
 const app = (0, express_1.default)();
+const hpp = require('hpp');
+const helmet = require('helmet');
 require('dotenv').config();
-app.use((0, cors_1.default)());
+app.use((0, cors_1.default)({
+    origin: 'http://127.0.0.1:5555',
+    methods: ['GET', 'POST', 'PUT'],
+    credentials: true
+}));
+app.use(helmet());
 app.use(express_1.default.json({ limit: "3kb" })); //parser//json data size limitation
+app.use(hpp()); //http parameter pollution
 //swagger endpoint
 app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
 //routes
@@ -28,7 +36,9 @@ app.use('/*', (req, res, next) => {
 //error handler 500
 app.use((error, req, res, next) => {
     try {
-        (0, audit_service_1.prepareAudit)(error.prepareAudit);
+        if (error.prepareAudit) {
+            (0, audit_service_1.prepareAudit)(error.prepareAudit);
+        }
         return res.status(500).json({
             error: "some error occurred, Please contact support"
         });
