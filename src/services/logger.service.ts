@@ -1,6 +1,6 @@
 const winston = require('winston');
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config()
 
 const dateFormat = () => {
 return new Date(Date.now()).toLocaleString();
@@ -35,7 +35,6 @@ async info(message: any, obj?: any) {
         this.logger.info(message, { obj });
     } else {
         this.logger.info(message);
-    
     }
 }
 
@@ -50,11 +49,9 @@ async error(message: any, obj?: any) {
 async debug(message: any, obj?: any) {
     if (obj) {
         this.logger.debug(message, { obj });
-    
     } else {
         this.logger.debug(message);
     }
 }
 }
-
 export default LoggerService;

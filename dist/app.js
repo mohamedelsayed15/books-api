@@ -8,6 +8,7 @@ const store_route_1 = __importDefault(require("./routes/store.route"));
 const book_route_1 = __importDefault(require("./routes/book.route"));
 const cors_1 = __importDefault(require("cors"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const audit_service_1 = require("./audit/audit.service");
 const swaggerDocument = require('../swagger.json');
 const app = (0, express_1.default)();
 require('dotenv').config();
@@ -18,6 +19,24 @@ app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.de
 //routes
 app.use('/store', store_route_1.default);
 app.use('/book', book_route_1.default);
+//404
+app.use('/*', (req, res, next) => {
+    return res.status(404).json({
+        error: "couldn't find the specified route"
+    });
+});
+//error handler 500
+app.use((error, req, res, next) => {
+    try {
+        (0, audit_service_1.prepareAudit)(error.prepareAudit);
+        return res.status(500).json({
+            error: "some error occurred, Please contact support"
+        });
+    }
+    catch (e) {
+        console.log(e);
+    }
+});
 app.listen(process.env.PORT, () => {
     console.log(process.env.PORT);
 });

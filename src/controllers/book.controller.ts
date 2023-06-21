@@ -2,8 +2,10 @@ import { Request,Response,NextFunction } from "express"
 import Book from "../models/book.model"
 import { prepareAudit } from "../audit/audit.service"
 import { auditAction } from "../audit/audit.action"
+import Logger from "../services/logger.service"
+const log = new Logger("book.controller")
 
-exports.getBooksList = async (req:Request,res:Response) => {
+exports.getBooksList = async (req:Request,res:Response,next:NextFunction) => {
     try {
         let booksList = await Book.getBooks()
         //auditing
@@ -17,14 +19,23 @@ exports.getBooksList = async (req:Request,res:Response) => {
         })
         res.status(200).json({ booksList })
 
-    } catch (e) {
-        console.log(e)
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        })
+    }  catch (err:any) {
+        console.error('An error occurred', err);
+        const error: any = new Error(err.message);
+        log.error('getBooksList', error.toString())
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'getBookDetails',
+            data:null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn:new Date(Date.now()).toLocaleString(),
+        }
+        return next(error);
     }
 }
-exports.getBookDetails = async (req:any,res:Response) => {
+exports.getBookDetails = async (req:any,res:Response,next:NextFunction) => {
     try {
         let book = await Book.findById(req.params.id)
         if (!book) {
@@ -34,16 +45,24 @@ exports.getBookDetails = async (req:any,res:Response) => {
         }
         res.status(200).json(book)
 
-    } catch (e) {
-        console.log(e)
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        })
+    } catch (err:any) {
+        console.error('An error occurred', err);
+        const error: any = new Error(err.message);
+        log.error('getBookDetails', error.toString())
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'getBookDetails',
+            data:null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn:new Date(Date.now()).toLocaleString(),
+        }
+        return next(error);
     }
 }
-exports.deleteBook = async (req:any,res:Response) => {
+exports.deleteBook = async (req:any,res:Response,next:NextFunction) => {
     try {
-        console.log("count")
         const count:any = await Book.count(req.params.id)
 
         if (count < 1) {
@@ -60,15 +79,24 @@ exports.deleteBook = async (req:any,res:Response) => {
 
         res.status(200).json(deletedBook)
 
-    } catch (e) {
-        console.log(e)
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        })
+    }  catch (err:any) {
+        console.error('An error occurred', err);
+        const error: any = new Error(err.message);
+        log.error('deleteBook', error.toString())
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'deleteBook',
+            data:null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn:new Date(Date.now()).toLocaleString(),
+        }
+        return next(error);
     }
 }
 
-exports.addBook = async (req: Request, res: Response) => {
+exports.addBook = async (req: Request, res: Response,next:NextFunction) => {
     try {
         if (!req.body.title ||
             !req.body.description ||
@@ -92,14 +120,23 @@ exports.addBook = async (req: Request, res: Response) => {
         })
 
         res.status(201).json(book)
-    } catch (e) {
-        console.log(e)
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        })
+    }  catch (err:any) {
+        console.error('An error occurred', err);
+        const error: any = new Error(err.message);
+        log.error('addBook', error.toString())
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'addBook',
+            data:null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn:new Date(Date.now()).toLocaleString(),
+        }
+        return next(error);
     }
 }
-exports.updateBook = async (req: Request, res: Response) => {
+exports.updateBook = async (req: Request, res: Response,next:NextFunction) => {
     try {
         if (!req.body.bookId||
             !req.body.title ||
@@ -133,10 +170,19 @@ exports.updateBook = async (req: Request, res: Response) => {
         })
 
         res.status(201).json({ book })
-    } catch (e) {
-        console.log(e)
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        })
+    } catch (err: any) {
+        console.error(err)
+        const error: any = new Error(err.message);
+        log.error('updateBook', error.toString())
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'updateBook',
+            data:null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn:new Date(Date.now()).toLocaleString(),
+        }
+        return next(error);
     }
 }

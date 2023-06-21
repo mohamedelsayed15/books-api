@@ -1,5 +1,5 @@
 import { EventEmitter } from 'node:events';
-import Audit  from '../models/audit.model'
+import Audit  from './audit.model'
 
 const eventEmitter = new EventEmitter()
 

@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.prepareAudit = void 0;
 const node_events_1 = require("node:events");
-const audit_model_1 = __importDefault(require("../models/audit.model"));
+const audit_model_1 = __importDefault(require("./audit.model"));
 const eventEmitter = new node_events_1.EventEmitter();
 eventEmitter.on(`audit`, (audit) => __awaiter(void 0, void 0, void 0, function* () {
     try {

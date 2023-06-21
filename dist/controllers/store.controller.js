@@ -13,7 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const store_model_1 = __importDefault(require("../models/store.model"));
-exports.addStore = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const logger_service_1 = __importDefault(require("../services/logger.service"));
+const log = new logger_service_1.default("store.controller");
+//===================================
+exports.addStore = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.body.storeName || !req.body.address) {
             return res.status(422).json({
@@ -26,19 +29,22 @@ exports.addStore = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
         res.status(201).json({ store });
     }
-    catch (e) {
-        console.log(e);
-        res.status(500).json({ e });
+    catch (err) {
+        console.error('An error occurred', err);
+        const error = new Error(err.message);
+        log.error('getBooksList', error.toString());
+        return next(error);
     }
 });
-exports.getStoreList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getStoreList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let storesList = yield store_model_1.default.getStores();
         res.status(200).json({ storesList });
     }
-    catch (e) {
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        });
+    catch (err) {
+        console.error('An error occurred', err);
+        const error = new Error(err.message);
+        log.error('getBooksList', error.toString());
+        return next(error);
     }
 });

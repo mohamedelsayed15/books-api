@@ -15,7 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const book_model_1 = __importDefault(require("../models/book.model"));
 const audit_service_1 = require("../audit/audit.service");
 const audit_action_1 = require("../audit/audit.action");
-exports.getBooksList = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const logger_service_1 = __importDefault(require("../services/logger.service"));
+const log = new logger_service_1.default("book.controller");
+exports.getBooksList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let booksList = yield book_model_1.default.getBooks();
         //auditing
@@ -29,33 +31,41 @@ exports.getBooksList = (req, res) => __awaiter(void 0, void 0, void 0, function*
         });
         res.status(200).json({ booksList });
     }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        });
+    catch (err) {
+        console.error('An error occurred', err);
+        const error = new Error(err.message);
+        log.error('getBooksList', error.toString());
+        return next(error);
     }
 });
-exports.getBookDetails = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.getBookDetails = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        let book = yield book_model_1.default.findById(req.params.id);
+        let book = yield book_model_1.default.findById(req.paams.id);
         if (!book) {
             return res.status(404).json({
                 error: "couldn't find specified book"
             });
         }
+        log.info('book', book);
         res.status(200).json(book);
     }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        });
+    catch (err) {
+        console.error('An error occurred', err);
+        const error = new Error(err.message);
+        log.error('getBookDetails', error.toString());
+        error.prepareAudit = {
+            auditAction: 'getBooksList',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
+        return next(error);
     }
 });
-exports.deleteBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.deleteBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        console.log("count");
         const count = yield book_model_1.default.count(req.params.id);
         if (count < 1) {
             return res.status(404).json({
@@ -69,14 +79,14 @@ exports.deleteBook = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         let deletedBook = yield bookObj.deleteBookById();
         res.status(200).json(deletedBook);
     }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        });
+    catch (err) {
+        console.error('An error occurred', err);
+        const error = new Error(err.message);
+        log.error('deleteBook', error.toString());
+        return next(error);
     }
 });
-exports.addBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.addBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.body.title ||
             !req.body.description ||
@@ -99,14 +109,14 @@ exports.addBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
         res.status(201).json(book);
     }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        });
+    catch (err) {
+        console.error('An error occurred', err);
+        const error = new Error(err.message);
+        log.error('addBook', error.toString());
+        return next(error);
     }
 });
-exports.updateBook = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+exports.updateBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         if (!req.body.bookId ||
             !req.body.title ||
@@ -137,10 +147,10 @@ exports.updateBook = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         });
         res.status(201).json({ book });
     }
-    catch (e) {
-        console.log(e);
-        return res.status(500).json({
-            error: "some error occurred, Please contact support"
-        });
+    catch (err) {
+        console.error('An error occurred', err);
+        const error = new Error(err.message);
+        log.error('updateBook', error.toString());
+        return next(error);
     }
 });
