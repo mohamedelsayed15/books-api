@@ -1,14 +1,22 @@
+export const userQuery = {
+    removeToken:`UPDATE your_table_name
+                SET your_array_column = array_remove(your_array_column, $1)
+                WHERE user_id = $2 AND your_array_column @> ARRAY[$1]`,
+    createUser: `INSERT INTO bms.app_user
+    (username, "password", email, user_type)
+    VALUES($1, $2, $3, $4) returning *
+    `,
+    findUserById: `SELECT * FROM bms.app_user where user_id = $1`,
+    getUsersList:  `SELECT * FROM bms.app_user`,
+    findUserByEmail:`SELECT user_id, "password"  FROM bms.app_user where Lower(email) = Lower($1)`
+}
+
 export const auditQuery = {
     ADD_AUDIT :`INSERT INTO bms.app_audit
     (audit_action, audit_data, audit_status, audit_error, audit_by, audit_on)
     VALUES($1, $2, $3, $4, $5, $6)`
 }
 
-export const userQuery = {
-    removeToken:`UPDATE your_table_name
-                SET your_array_column = array_remove(your_array_column, $1)
-                WHERE user_id = $2 AND your_array_column @> ARRAY[$1]`
-}
 
 export const storeQuery = {
 

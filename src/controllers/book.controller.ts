@@ -92,7 +92,7 @@ exports.deleteBook = async (req:any,res:Response,next:NextFunction) => {
 }
 
 exports.addBook = async (req: Request, res: Response,next:NextFunction) => {
-    try {
+    try {//replace with validation
         if (!req.body.title ||
             !req.body.description ||
             !req.body.isbn ||
@@ -133,6 +133,7 @@ exports.addBook = async (req: Request, res: Response,next:NextFunction) => {
 }
 exports.updateBook = async (req: Request, res: Response,next:NextFunction) => {
     try {
+        //replace with validation
         if (!req.body.bookId||
             !req.body.title ||
             !req.body.description ||

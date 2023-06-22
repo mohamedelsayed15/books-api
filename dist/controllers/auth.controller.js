@@ -12,52 +12,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const store_model_1 = __importDefault(require("../models/store.model"));
+const user_model_1 = __importDefault(require("../models/user.model"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+require('dotenv').config();
 const logger_service_1 = __importDefault(require("../services/logger.service"));
 const log = new logger_service_1.default("store.controller");
 //===================================
-exports.addStore = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         //replace with validation
-        if (!req.body.storeName || !req.body.address) {
-            return res.status(422).json({
-                error: "Either storeName or address are required"
+        if (!req.body.email || !req.body.password) {
+            return res.status(422).send({
+                error: "validation error"
             });
         }
-        const store = yield store_model_1.default.create({
-            name: req.body.storeName,
-            address: req.body.address
+        const user = yield user_model_1.default.findByEmail(req.body.email);
+        console.log(user);
+        if (!user) {
+            return res.status(404).json({
+                error: "couldn't find the specified user"
+            });
+        }
+        //replace with bcrypt compare
+        if (req.body.password !== user.password) {
+            return res.status(404).json({
+                error: "couldn't find the specified user"
+            });
+        }
+        const token = yield jsonwebtoken_1.default.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
+        res.json({
+            user, token
         });
-        res.status(201).json({ store });
     }
     catch (err) {
         console.error(err);
         const error = new Error(err.message);
-        log.error('addStore', error.toString());
+        log.error('updateBook', error.toString());
         // data for auditing handled in error handler in app.ts
         error.prepareAudit = {
-            auditAction: 'addStore',
-            data: null,
-            status: 500,
-            error: error.toString(),
-            auditBy: "internal server error",
-            auditOn: new Date(Date.now()).toLocaleString(),
-        };
-        return next(error);
-    }
-});
-exports.getStoreList = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        let storesList = yield store_model_1.default.getStores();
-        res.status(200).json({ storesList });
-    }
-    catch (err) {
-        console.error(err);
-        const error = new Error(err.message);
-        log.error('getStoreList', error.toString());
-        // data for auditing handled in error handler in app.ts
-        error.prepareAudit = {
-            auditAction: 'getStoreList',
+            auditAction: 'updateBook',
             data: null,
             status: 500,
             error: error.toString(),

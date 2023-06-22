@@ -96,7 +96,7 @@ exports.deleteBook = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
     }
 });
 exports.addBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
+    try { //replace with validation
         if (!req.body.title ||
             !req.body.description ||
             !req.body.isbn ||
@@ -136,6 +136,7 @@ exports.addBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function
 });
 exports.updateBook = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        //replace with validation
         if (!req.body.bookId ||
             !req.body.title ||
             !req.body.description ||

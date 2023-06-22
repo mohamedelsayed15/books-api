@@ -10,7 +10,7 @@ const log = new Logger("store.controller")
 
 exports.addStore = async (req: Request, res: Response,next:NextFunction) => {
     try {
-
+//replace with validation
         if (!req.body.storeName || !req.body.address) {
             return res.status(422).json({
                 error: "Either storeName or address are required"

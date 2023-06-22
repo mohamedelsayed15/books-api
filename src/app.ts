@@ -1,6 +1,8 @@
 import express, {Request,Response, NextFunction } from 'express'
 import storeRoutes from './routes/store.route'
 import bookRoutes from './routes/book.route'
+import userRoutes from './routes/user.route'
+import authRoutes from './routes/auth.route'
 import cors from 'cors'
 import swaggerUi from 'swagger-ui-express'
 import { prepareAudit } from "./audit/audit.service"
@@ -13,7 +15,7 @@ const helmet = require('helmet')
 require('dotenv').config()
 app.use(cors({
     origin: 'http://127.0.0.1:5555',//postman default port
-    methods: ['GET', 'POST', 'PUT'],
+    methods: ['GET', 'POST', 'PUT','PATCH'],
     credentials:true
 }))
 app.use(helmet())
@@ -25,6 +27,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 //routes
 app.use('/store', storeRoutes)
 app.use('/book', bookRoutes)
+app.use('/user', userRoutes)
+app.use('/auth',authRoutes)
 
 //404
 app.use('/*', (req, res, next) => {

@@ -36,4 +36,15 @@ CREATE TABLE bms.app_audit (
 	audit_status varchar(50) NULL,
 	audit_error json NULL,
 	CONSTRAINT app_audit_pkey PRIMARY KEY (audit_id)
-);
+)
+
+CREATE TABLE bms.app_user (
+	user_id serial NOT NULL,
+	username varchar(100) NOT NULL,
+	"password" varchar(100) NOT NULL,
+	email varchar(355) NOT NULL,
+	user_type varchar(10) NOT NULL,
+	active int2 NULL DEFAULT 1,
+	CONSTRAINT user_email_key UNIQUE (email),
+	CONSTRAINT user_pkey PRIMARY KEY (user_id)
+)

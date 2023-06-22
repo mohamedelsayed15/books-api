@@ -1,15 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.bookQuery = exports.storeQuery = exports.userQuery = exports.auditQuery = void 0;
+exports.bookQuery = exports.storeQuery = exports.auditQuery = exports.userQuery = void 0;
+exports.userQuery = {
+    removeToken: `UPDATE your_table_name
+                SET your_array_column = array_remove(your_array_column, $1)
+                WHERE user_id = $2 AND your_array_column @> ARRAY[$1]`,
+    createUser: `INSERT INTO bms.app_user
+    (username, "password", email, user_type)
+    VALUES($1, $2, $3, $4) returning *
+    `,
+    findUserById: `SELECT * FROM bms.app_user where user_id = $1`,
+    getUsersList: `SELECT * FROM bms.app_user`,
+    findUserByEmail: `SELECT user_id, "password"  FROM bms.app_user where Lower(email) = Lower($1)`
+};
 exports.auditQuery = {
     ADD_AUDIT: `INSERT INTO bms.app_audit
     (audit_action, audit_data, audit_status, audit_error, audit_by, audit_on)
     VALUES($1, $2, $3, $4, $5, $6)`
-};
-exports.userQuery = {
-    removeToken: `UPDATE your_table_name
-                SET your_array_column = array_remove(your_array_column, $1)
-                WHERE user_id = $2 AND your_array_column @> ARRAY[$1]`
 };
 exports.storeQuery = {
     GET_STORE_LIST: `SELECT STORE_ID, STORE_NAME, STORE_CODE FROM BMS.STORE`,
