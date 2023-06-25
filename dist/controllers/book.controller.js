@@ -13,6 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const book_model_1 = __importDefault(require("../models/book.model"));
+const multer_book_1 = require("../util/multer-book");
+const fs_1 = __importDefault(require("fs"));
 const logger_service_1 = __importDefault(require("../services/logger.service"));
 const log = new logger_service_1.default("store.controller");
 //===================================
@@ -165,6 +167,47 @@ exports.updateBook = (req, res, next) => __awaiter(void 0, void 0, void 0, funct
             storeCode: req.body.storeCode
         });
         res.status(201).json({ book });
+    }
+    catch (err) {
+        console.error(err);
+        const error = new Error(err.message);
+        log.error('updateBook', error.toString());
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'updateBook',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
+        return next(error);
+    }
+});
+exports.bookImage = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const bookId = req.params.id;
+        if (!bookId) {
+            return res.status(422).send();
+        }
+        console.log(bookId);
+        // find the book first
+        const book = yield book_model_1.default.findById(bookId);
+        console.log(book);
+        if (!book) {
+            return res.status(404).json({
+                error: "couldn't find the book"
+            });
+        }
+        const directoryPath = 'images/book-image/' + `${book.book_id}`;
+        yield fs_1.default.promises.mkdir(directoryPath);
+        const upload = (0, multer_book_1.bookUpload)(directoryPath);
+        upload(req, res, next => {
+            console.log(req.file.path);
+        });
+        res.send({
+            message: "book image uploaded"
+        });
     }
     catch (err) {
         console.error(err);

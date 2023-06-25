@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.auth = void 0;
+exports.createTokens = exports.auth = void 0;
 const jwt = require('jsonwebtoken');
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -29,6 +29,9 @@ const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.auth = auth;
+const createTokens = (user) => {
+};
+exports.createTokens = createTokens;
 const jwtVerify = (headerToken) => {
     return new Promise((resolve, reject) => {
         jwt.verify(headerToken, process.env.JWT_SECRET, (err, decoded) => {

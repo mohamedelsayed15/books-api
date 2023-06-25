@@ -98,3 +98,32 @@ exports.findUserById = async (req:any,res:Response,next:NextFunction) => {
         return next(error);
     }
 }
+exports.userPic = async (req:any,res:Response,next:NextFunction) => {
+    try {
+
+        if (!req.file) {
+            return res.status(422).json({
+                error: "Please, Provide a photo"
+            })
+        }
+        // store the file into the data base
+        console.log(req.file.path)
+
+        res.send('uploaded');
+
+    } catch (err:any) {
+        console.error('An error occurred', err)
+        const error: any = new Error(err.message)
+        log.error('findUserById', error.toString())
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'findUserById',
+            data:null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn:new Date(Date.now()).toLocaleString(),
+        }
+        return next(error);
+    }
+}

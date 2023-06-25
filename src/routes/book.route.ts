@@ -19,6 +19,10 @@ router.post(
     '/add-book',
     bookController.addBook)
 
+router.post(
+    '/add-book-image/:id',
+    bookController.bookImage)
+
 router.patch(
     '/edit-book',
     bookController.updateBook)

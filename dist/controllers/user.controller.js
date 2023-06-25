@@ -104,3 +104,30 @@ exports.findUserById = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
         return next(error);
     }
 });
+exports.userPic = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        if (!req.file) {
+            return res.status(422).json({
+                error: "Please, Provide a photo"
+            });
+        }
+        // store the file into the data base
+        console.log(req.file.path);
+        res.send('uploaded');
+    }
+    catch (err) {
+        console.error('An error occurred', err);
+        const error = new Error(err.message);
+        log.error('findUserById', error.toString());
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'findUserById',
+            data: null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn: new Date(Date.now()).toLocaleString(),
+        };
+        return next(error);
+    }
+});

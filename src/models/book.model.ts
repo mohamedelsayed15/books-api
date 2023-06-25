@@ -46,7 +46,7 @@ export default class Book {
         return new Promise(async (resolve, reject) => {
             try {
                 // implement query
-                await query(bookQuery.ADD_BOOK, [
+                const book :any= await query(bookQuery.ADD_BOOK, [
                     title,
                     description,
                     isbn,
@@ -55,7 +55,7 @@ export default class Book {
                     pages,
                     storeCode
                 ]);
-                resolve(options)
+                resolve(book.rows[0])
             } catch (e) {
                 reject(e)
             }
@@ -75,7 +75,7 @@ export default class Book {
         return new Promise(async (resolve, reject) => {
             try {
                 // implement query
-                await query(bookQuery.UPDATE_BOOK, [
+                const book:any = await query(bookQuery.UPDATE_BOOK, [
                     title,
                     description,
                     isbn,
@@ -85,7 +85,7 @@ export default class Book {
                     storeCode,
                     bookId
                 ]);
-                resolve(options)
+                resolve(book.rows[0])
             } catch (e) {
                 reject(e)
             }

@@ -39,7 +39,8 @@ exports.login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
                 error: "couldn't find the specified user"
             });
         }
-        const token = yield jsonwebtoken_1.default.sign({ user_id: user.user_id }, process.env.JWT_SECRET);
+        user.password = '';
+        const token = yield jsonwebtoken_1.default.sign({ user_id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '7d' });
         res.json({
             user, token
         });

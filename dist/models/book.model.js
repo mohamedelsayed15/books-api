@@ -31,7 +31,7 @@ class Book {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     // implement query
-                    yield (0, connection_1.query)(queries_1.bookQuery.ADD_BOOK, [
+                    const book = yield (0, connection_1.query)(queries_1.bookQuery.ADD_BOOK, [
                         title,
                         description,
                         isbn,
@@ -40,7 +40,7 @@ class Book {
                         pages,
                         storeCode
                     ]);
-                    resolve(options);
+                    resolve(book.rows[0]);
                 }
                 catch (e) {
                     reject(e);
@@ -54,7 +54,7 @@ class Book {
             return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
                 try {
                     // implement query
-                    yield (0, connection_1.query)(queries_1.bookQuery.UPDATE_BOOK, [
+                    const book = yield (0, connection_1.query)(queries_1.bookQuery.UPDATE_BOOK, [
                         title,
                         description,
                         isbn,
@@ -64,7 +64,7 @@ class Book {
                         storeCode,
                         bookId
                     ]);
-                    resolve(options);
+                    resolve(book.rows[0]);
                 }
                 catch (e) {
                     reject(e);

@@ -1,10 +1,12 @@
 import { Request,Response,NextFunction } from "express"
 import Book from "../models/book.model"
-
+import { bookUpload } from "../util/multer-book"
+import fs from 'fs'
 //logging and auditing
 import { prepareAudit } from "../audit/audit.service"
 import { auditAction } from "../audit/audit.action"
 import Logger from "../services/logger.service"
+import { upload } from "../util/multer-user"
 const log = new Logger("store.controller")
 //===================================
 
@@ -166,6 +168,53 @@ exports.updateBook = async (req: Request, res: Response,next:NextFunction) => {
         })
 
         res.status(201).json({ book })
+    } catch (err: any) {
+        console.error(err)
+        const error: any = new Error(err.message);
+        log.error('updateBook', error.toString())
+        // data for auditing handled in error handler in app.ts
+        error.prepareAudit = {
+            auditAction: 'updateBook',
+            data:null,
+            status: 500,
+            error: error.toString(),
+            auditBy: "internal server error",
+            auditOn:new Date(Date.now()).toLocaleString(),
+        }
+        return next(error);
+    }
+}
+
+exports.bookImage = async (req: any, res: Response,next:NextFunction) => {
+    try {
+        const bookId = req.params.id
+        if (!bookId) {
+            return res.status(422).send()
+        }
+        console.log(bookId)
+        // find the book first
+        const book:any = await Book.findById(bookId)
+        console.log(book)
+        if (!book) {
+            return res.status(404).json({
+                error:"couldn't find the book"
+            })
+        }
+
+        const directoryPath = 'images/book-image/' + `${book.book_id}`
+
+        await fs.promises.mkdir(directoryPath)
+
+        const upload = bookUpload(directoryPath)
+
+        upload(req, res, next => {
+            //save into database
+            console.log(req.file.path)
+        })
+
+        res.send({
+            message:"book image uploaded"
+        })
     } catch (err: any) {
         console.error(err)
         const error: any = new Error(err.message);

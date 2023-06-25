@@ -34,7 +34,7 @@ export const bookQuery = {
     
     ADD_BOOK: `INSERT INTO bms.book 
                 (book_title, book_description, book_isbn, book_author, book_publisher, book_pages, store_code)
-                VALUES($1, $2, $3, $4, $5, $6, $7)`,
+                VALUES($1, $2, $3, $4, $5, $6, $7) returning *`,
 
     GET_BOOK_DETAILS: `SELECT 
                         book_id, book_title, book_description, book_isbn, 

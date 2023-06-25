@@ -7,6 +7,7 @@ router.get('/books-list', bookController.getBooksList);
 router.get('/book-details/:id', bookController.getBookDetails);
 router.delete('/delete-book/:id', bookController.deleteBook);
 router.post('/add-book', bookController.addBook);
+router.post('/add-book-image/:id', bookController.bookImage);
 router.patch('/edit-book', bookController.updateBook);
 //404
 router.use('/*', (req, res) => {

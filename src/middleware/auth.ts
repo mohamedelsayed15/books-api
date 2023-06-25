@@ -22,6 +22,9 @@ export const auth = async (req:any, res:Response, next:NextFunction) => {
     } catch (e) {
     }
 }
+export const createTokens = (user:any) => {
+    
+}
 const jwtVerify = (headerToken: string) => {
     
     return new Promise((resolve, reject) => {
