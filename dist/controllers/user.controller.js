@@ -111,7 +111,7 @@ exports.userPic = (req, res, next) => __awaiter(void 0, void 0, void 0, function
                 error: "Please, Provide a photo"
             });
         }
-        // store the file into the data base
+        // store the file into the database
         console.log(req.file.path);
         res.send('uploaded');
     }

@@ -106,7 +106,7 @@ exports.userPic = async (req:any,res:Response,next:NextFunction) => {
                 error: "Please, Provide a photo"
             })
         }
-        // store the file into the data base
+        // store the file into the database
         console.log(req.file.path)
 
         res.send('uploaded');

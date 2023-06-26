@@ -191,10 +191,9 @@ exports.bookImage = async (req: any, res: Response,next:NextFunction) => {
         if (!bookId) {
             return res.status(422).send()
         }
-        console.log(bookId)
         // find the book first
-        const book:any = await Book.findById(bookId)
-        console.log(book)
+        const book: any = await Book.findById(bookId)
+        
         if (!book) {
             return res.status(404).json({
                 error:"couldn't find the book"
@@ -202,7 +201,7 @@ exports.bookImage = async (req: any, res: Response,next:NextFunction) => {
         }
 
         const directoryPath = 'images/book-image/' + `${book.book_id}`
-
+        // creating a directory for the product
         await fs.promises.mkdir(directoryPath)
 
         const upload = bookUpload(directoryPath)

@@ -190,19 +190,19 @@ exports.bookImage = (req, res, next) => __awaiter(void 0, void 0, void 0, functi
         if (!bookId) {
             return res.status(422).send();
         }
-        console.log(bookId);
         // find the book first
         const book = yield book_model_1.default.findById(bookId);
-        console.log(book);
         if (!book) {
             return res.status(404).json({
                 error: "couldn't find the book"
             });
         }
         const directoryPath = 'images/book-image/' + `${book.book_id}`;
+        // creating a directory for the product
         yield fs_1.default.promises.mkdir(directoryPath);
         const upload = (0, multer_book_1.bookUpload)(directoryPath);
         upload(req, res, next => {
+            //save into database
             console.log(req.file.path);
         });
         res.send({
