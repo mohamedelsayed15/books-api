@@ -53,7 +53,7 @@ app.use((error:any, req:Request, res:Response, next:NextFunction) => {
         console.log(e)
     }
 })
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log(process.env.PORT)
 })
 module.exports = app
